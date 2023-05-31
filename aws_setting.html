@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" /> -->
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Gateway Configuration</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+
+ 
+        <!-- <meta charset="utf-8">
+        <style type="text/css">
+            /* html {font-family: Times New Roman; display: inline-block; text-align: center;} */
+            h2 {
+                font-size: 2.0rem;
+                color: #000000;
+            }
+
+            input.dig1 {
+                width: 1em;
+            }
+
+            label {
+                float: left;
+                width: 150px;
+                text-align: right;
+                margin-right: 0.5em;
+            }
+
+            .wifiP label {
+                float: left;
+            }
+
+            input.dig2 {
+                width: 2em;
+            }
+
+            input.dig3 {
+                width: 3em;
+            }
+
+            input.dig4 {
+                width: 4em;
+            }
+
+            input.dig5 { width: 5em; }
+        input.dig6 { width: 6em; }
+        input.dig10 { width: 10em; }
+        input.dig20 { width: 20em; }
+        input.dig50 { width: 50em; }
+        </style> -->
+  
+
+
+</head>
+
+<body>
+    <div  class="d-flex" id="wrapper">
+        <!-- Sidebar-->
+        <div class=" bg-white " id="sidebar-wrapper" style="background:rgba(0,161,229,255) !important;">
+            <main_colour>
+                <div class="sidebar-heading  bg-white"><img src="DAIKIN_logo.png" height="40px"></div>
+                <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3 border-bottom" href="/Wifi.html">WIFI
+                        Setting</a>
+                      <a class="list-group-item list-group-item-action list-group-item-light p-3 border-bottom" href="/BLE.html">Bluetooth
+                        Setting</a>
+                      <a class="list-group-item list-group-item-action list-group-item-light p-3 border-bottom" href="/aws_setting.html">AWS
+                        Configuration</a>
+            </main_colour>
+        </div>
+    </div>
+        <!-- Page content wrapper-->
+        <div id="page-content-wrapper">
+            <!-- Top navigation-->
+            <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                    <div class="container-fluid">
+                        
+                        
+                    </div>
+                </nav> -->
+            <!-- Page content-->
+            <div class="mt-5" class="container-fluid">
+                <!-- <h1 class="mt-4">Simple Sidebar</h1> -->
+                <h2>AWS Configuration </h2>
+                <form method="post" action="/post">Gateway ID : <input type="text" name="text33"
+                        value="00002"><br><br>Thing Name :
+                    <input type="text" name="text34" value="AWSGatewayThing"><br><br>AWS Endpoint : <input type="text"
+                        size="80" name="text35" value="a1fkzigr3reyux-ats.iot.us-east-1.amazonaws.com"><br><br>
+                        <!-- <input
+                        type="submit" name="submit4" value="Submit"> -->
+                </form><br><br><br>
+                <hr>
+
+                
+                <table class="fixed" border="0">
+                    <col width="1000px" />
+                    <col width="500px" />
+                    <tr>
+                        <td>
+                            <h2>AWS Certificate Provisioning</h2>
+                        </td>
+                        <td style="width: 50%;">
+                            <table border="0">
+                                <tr>
+                                    <td>
+                                        <label for="newfile">Upload a file</label>
+                                    </td>
+                                    <td colspan="2">
+                                        <input id="newfile" type="file" onchange="setpath()" style="width:100%;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="filepath">Set path on server</label>
+                                    </td>
+                                    <td>
+                                        <input id="filepath" type="text" style="width:100%;">
+                                    </td>
+                                    <td>
+                                        <button id="upload" type="button" onclick="upload()">Upload</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <script>
+                    function setpath() {
+                        var default_path = document.getElementById("newfile").files[0].name;
+                        document.getElementById("filepath").value = default_path;
+                    }
+                    function upload() {
+                        var filePath = document.getElementById("filepath").value;
+                        var upload_path = "/upload/" + filePath;
+                        var fileInput = document.getElementById("newfile").files;
+
+                        /* Max size of an individual file. Make sure this
+                         * value is same as that set in file_server.c */
+                        var MAX_FILE_SIZE = 200 * 1024;
+                        var MAX_FILE_SIZE_STR = "200KB";
+
+                        if (fileInput.length == 0) {
+                            alert("No file selected!");
+                        } else if (filePath.length == 0) {
+                            alert("File path on server is not set!");
+                        } else if (filePath.indexOf(' ') >= 0) {
+                            alert("File path on server cannot have spaces!");
+                        } else if (filePath[filePath.length - 1] == '/') {
+                            alert("File name not specified after path!");
+                        } else if (fileInput[0].size > 200 * 1024) {
+                            alert("File size must be less than 200KB!");
+                        } else {
+                            document.getElementById("newfile").disabled = true;
+                            document.getElementById("filepath").disabled = true;
+                            document.getElementById("upload").disabled = true;
+
+                            var file = fileInput[0];
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.onreadystatechange = function () {
+                                if (xhttp.readyState == 4) {
+                                    if (xhttp.status == 200) {
+                                        document.open();
+                                        document.write(xhttp.responseText);
+                                        document.close();
+                                    } else if (xhttp.status == 0) {
+                                        alert("Server closed the connection abruptly!");
+                                        location.reload()
+                                    } else {
+                                        alert(xhttp.status + " Error!\n" + xhttp.responseText);
+                                        location.reload()
+                                    }
+                                }
+                            };
+                            xhttp.open("POST", upload_path, true);
+                            xhttp.send(file);
+                        }
+                    }
+                </script>
+                <table class="fixed" border="1">
+                    <col width="300px" />
+                    <col width="300px" />
+                    <col width="200px" />
+                    <col width="100px" />
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Size (Bytes)</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="/client.crt">client.crt</a></td>
+                            <td>file</td>
+                            <td>1224</td>
+                            <td>
+                                <form method="post" action="/delete/client.crt"><button type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="/client.key">client.key</a></td>
+                            <td>file</td>
+                            <td>1675</td>
+                            <td>
+                                <form method="post" action="/delete/client.key"><button type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <form method="post" action="/exit">
+                    <hr><br><br>
+                    <!-- <button class="block"><input type="submit" name="submit3" value="Exit"></button> -->
+                    <!-- <input href="/BLE.html" type="submit" name="submit1" value=" Next "> -->
+                    <input type="submit" name="submit1" value="  Exit  ">
+                </form><br></form><br>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
